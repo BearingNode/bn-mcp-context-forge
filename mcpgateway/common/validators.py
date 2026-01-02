@@ -458,7 +458,7 @@ class SecurityValidator:
             >>> SecurityValidator.validate_tool_name('1tool')
             Traceback (most recent call last):
                 ...
-            ValueError: Tool name must start with a letter and contain only letters, numbers, and underscore
+            ValueError: Tool name must start with a letter and contain only letters, numbers, underscore, dot, and hyphen
 
             Test HTML special characters (line 310):
 
