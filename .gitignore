@@ -61,6 +61,7 @@ FIXMEs
 *.old
 logs/
 *.log
+/Status
 
 # Fuzzing artifacts and reports
 reports/
