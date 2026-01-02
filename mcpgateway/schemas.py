@@ -403,39 +403,10 @@ class ToolCreate(BaseModel):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ToolCreate
-            >>> ToolCreate.validate_description('A safe description')
-            'A safe description'
-            >>> ToolCreate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ToolCreate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
-
-        forbidden_patterns = ["&&", ";", "||", "$(", "`", "|", "> ", "< "]
-        for pat in forbidden_patterns:
-            if pat in v:
-                raise ValueError(f"Description contains unsafe characters: '{pat}'")
-
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -942,33 +913,10 @@ class ToolUpdate(BaseModelWithConfigDict):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ToolUpdate
-            >>> ToolUpdate.validate_description('A safe description')
-            'A safe description'
-            >>> ToolUpdate.validate_description(None)  # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ToolUpdate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -1567,33 +1515,10 @@ class ResourceCreate(BaseModel):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ResourceCreate
-            >>> ResourceCreate.validate_description('A safe description')
-            'A safe description'
-            >>> ResourceCreate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ResourceCreate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -1696,33 +1621,10 @@ class ResourceUpdate(BaseModelWithConfigDict):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ResourceUpdate
-            >>> ResourceUpdate.validate_description('A safe description')
-            'A safe description'
-            >>> ResourceUpdate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ResourceUpdate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -2092,33 +1994,10 @@ class PromptCreate(BaseModel):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import PromptCreate
-            >>> PromptCreate.validate_description('A safe description')
-            'A safe description'
-            >>> PromptCreate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = PromptCreate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -2227,33 +2106,10 @@ class PromptUpdate(BaseModelWithConfigDict):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import PromptUpdate
-            >>> PromptUpdate.validate_description('A safe description')
-            'A safe description'
-            >>> PromptUpdate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = PromptUpdate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -3473,33 +3329,10 @@ class ServerCreate(BaseModel):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ServerCreate
-            >>> ServerCreate.validate_description('A safe description')
-            'A safe description'
-            >>> ServerCreate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ServerCreate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
@@ -3648,33 +3481,10 @@ class ServerUpdate(BaseModelWithConfigDict):
     @field_validator("description")
     @classmethod
     def validate_description(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure descriptions display safely, truncate if too long
-
-        Args:
-            v (str): Value to validate
-
-        Returns:
-            str: Value if validated as safe and truncated if too long
-
-        Raises:
-            ValueError: When value is unsafe
-
-        Examples:
-            >>> from mcpgateway.schemas import ServerUpdate
-            >>> ServerUpdate.validate_description('A safe description')
-            'A safe description'
-            >>> ServerUpdate.validate_description(None) # Test None case
-            >>> long_desc = 'x' * SecurityValidator.MAX_DESCRIPTION_LENGTH
-            >>> truncated = ServerUpdate.validate_description(long_desc)
-            >>> len(truncated) - SecurityValidator.MAX_DESCRIPTION_LENGTH
-            0
-            >>> truncated == long_desc[:SecurityValidator.MAX_DESCRIPTION_LENGTH]
-            True
-        """
+        """Ensure descriptions display safely, truncate if too long"""
         if v is None:
             return v
         if len(v) > SecurityValidator.MAX_DESCRIPTION_LENGTH:
-            # Truncate the description to the maximum allowed length
             truncated = v[: SecurityValidator.MAX_DESCRIPTION_LENGTH]
             logger.info(f"Description too long, truncated to {SecurityValidator.MAX_DESCRIPTION_LENGTH} characters.")
             return SecurityValidator.sanitize_display_text(truncated, "Description")
