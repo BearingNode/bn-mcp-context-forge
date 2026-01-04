@@ -1,0 +1,3 @@
+[submodule "bn-private-collab"]
+	path = bn-private-collab
+	url = https://github.com/BearingNode/mcp-opensource-collaboration.git
