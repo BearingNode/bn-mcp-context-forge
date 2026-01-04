@@ -300,11 +300,12 @@ class SecurityValidator:
         if not value:
             raise ValueError(f"{field_name} cannot be empty")
 
-        # Check against allowed pattern
+        # Check against allowed pattern (allows: a-zA-Z0-9_.-<space>)
         if not re.match(cls.NAME_PATTERN, value):
-            raise ValueError(f"{field_name} can only contain letters, numbers, underscore, and hyphen. Special characters like <, >, quotes are not allowed.")
+            raise ValueError(f"{field_name} can only contain letters, numbers, underscore, hyphen, dot, and spaces. Special characters like <, >, quotes are not allowed.")
 
-        # Additional check for HTML-like patterns (uses precompiled regex)
+        # Defense-in-depth: Additional check for HTML-like patterns even though pattern should exclude them
+        # This serves as a safety net if NAME_PATTERN is misconfigured or changed (uses precompiled regex)
         if _HTML_SPECIAL_CHARS_RE.search(value):
             raise ValueError(f"{field_name} cannot contain HTML special characters")
 
@@ -382,11 +383,12 @@ class SecurityValidator:
         if not value:
             raise ValueError(f"{field_name} cannot be empty")
 
-        # MCP spec: identifiers should be alphanumeric + limited special chars
+        # MCP spec: identifiers should be alphanumeric + limited special chars (allows: a-zA-Z0-9_-.  )
         if not re.match(cls.IDENTIFIER_PATTERN, value):
             raise ValueError(f"{field_name} can only contain letters, numbers, underscore, hyphen, and dots")
 
-        # Block HTML-like patterns (uses precompiled regex)
+        # Defense-in-depth: Block HTML-like patterns even though pattern should exclude them
+        # This serves as a safety net if IDENTIFIER_PATTERN is misconfigured or changed (uses precompiled regex)
         if _HTML_SPECIAL_CHARS_RE.search(value):
             raise ValueError(f"{field_name} cannot contain HTML special characters")
 
@@ -420,13 +422,15 @@ class SecurityValidator:
         if not value:
             raise ValueError(f"{field_name} cannot be empty")
 
-        # Block HTML-like patterns
+        # Defense-in-depth: Check for explicitly unsafe patterns first
+        # VALIDATION_UNSAFE_URI_PATTERN: [<>"'\\]
         if re.search(cls.VALIDATION_UNSAFE_URI_PATTERN, value):
             raise ValueError(f"{field_name} cannot contain HTML special characters")
 
         if ".." in value:
             raise ValueError(f"{field_name} cannot contain directory traversal sequences ('..')")
 
+        # Then verify against safe character allowlist (a-zA-Z0-9_-.:/? =&%{})
         if not re.search(cls.VALIDATION_SAFE_URI_PATTERN, value):
             raise ValueError(f"{field_name} contains invalid characters")
 
@@ -454,7 +458,7 @@ class SecurityValidator:
             >>> SecurityValidator.validate_tool_name('1tool')
             Traceback (most recent call last):
                 ...
-            ValueError: Tool name must start with a letter and contain only letters, numbers, and underscore
+            ValueError: Tool name must start with a letter and contain only letters, numbers, underscore, dot, and hyphen
 
             Test HTML special characters (line 310):
 
@@ -491,11 +495,12 @@ class SecurityValidator:
         if not value:
             raise ValueError("Tool name cannot be empty")
 
-        # MCP tools have specific naming requirements
+        # MCP tools have specific naming requirements (must start with letter, then: a-zA-Z0-9._- )
         if not re.match(cls.TOOL_NAME_PATTERN, value):
-            raise ValueError("Tool name must start with a letter and contain only letters, numbers, and underscore")
+            raise ValueError("Tool name must start with a letter and contain only letters, numbers, underscore, dot, and hyphen")
 
-        # Ensure no HTML-like content (uses precompiled regex)
+        # Defense-in-depth: Ensure no HTML-like content even though pattern should exclude them
+        # This serves as a safety net if TOOL_NAME_PATTERN is misconfigured or changed (uses precompiled regex)
         if _HTML_SPECIAL_CHARS_RE.search(value):
             raise ValueError("Tool name cannot contain HTML special characters")
 
