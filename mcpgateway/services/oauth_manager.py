@@ -1164,8 +1164,52 @@ class OAuthManager:
         if "id" in token_response:
             return token_response["id"]
 
-        # Fallback to client_id if no user info is available
+        # Microsoft/Entra ID: Try to decode access_token JWT to get oid or preferred_username
+        if "access_token" in token_response:
+            try:
+                import base64
+                import json
+                
+                # JWT format: header.payload.signature
+                token_parts = token_response["access_token"].split(".")
+                if len(token_parts) >= 2:
+                    # Decode payload (add padding if needed for base64)
+                    payload_b64 = token_parts[1]
+                    # Add padding if needed
+                    padding = 4 - (len(payload_b64) % 4)
+                    if padding != 4:
+                        payload_b64 += "=" * padding
+                    
+                    payload_json = base64.urlsafe_b64decode(payload_b64)
+                    payload = json.loads(payload_json)
+                    
+                    # Microsoft Entra ID uses 'oid' (object ID) as primary user identifier
+                    if "oid" in payload:
+                        logger.info(f"Extracted user ID from JWT oid claim: {payload['oid']}")
+                        return payload["oid"]
+                    
+                    # Fallback to 'sub' in JWT payload
+                    if "sub" in payload:
+                        logger.info(f"Extracted user ID from JWT sub claim: {payload['sub']}")
+                        return payload["sub"]
+                    
+                    # Fallback to 'preferred_username' (email)
+                    if "preferred_username" in payload:
+                        logger.info(f"Extracted user ID from JWT preferred_username: {payload['preferred_username']}")
+                        return payload["preferred_username"]
+                    
+                    # Fallback to 'upn' (User Principal Name)
+                    if "upn" in payload:
+                        logger.info(f"Extracted user ID from JWT upn claim: {payload['upn']}")
+                        return payload["upn"]
+                    
+                    logger.debug(f"JWT payload decoded but no user ID claims found. Available claims: {list(payload.keys())}")
+            except Exception as e:
+                logger.warning(f"Failed to decode JWT access_token for user ID extraction: {e}")
+
+        # Fallback to client_id if no user info is available (LEGACY - logs warning)
         if credentials.get("client_id"):
+            logger.warning(f"Using client_id as user_id fallback - this prevents per-user OAuth! Client: {credentials.get('client_id')}")
             return credentials["client_id"]
 
         # Final fallback
